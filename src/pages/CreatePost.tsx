@@ -12,10 +12,10 @@ const CreatePost: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   
-  const handleCreatePost = async (values: { title: string; content: string }) => {
+  const handleCreatePost = async (formData: FormData) => {
     try {
       setIsSubmitting(true);
-      const newPost = await createPost(values);
+      const newPost = await createPost(formData);
       toast.success("Post created successfully!");
       navigate(`/post/${newPost.id}`);
     } catch (error) {

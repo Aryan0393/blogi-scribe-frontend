@@ -16,7 +16,17 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
   const isUpdated = updatedAt.getTime() > createdAt.getTime();
   
   return (
-    <Card className="h-full flex flex-col hover:shadow-lg transition-shadow">
+    <Card className="h-full flex flex-col hover:shadow-lg transition-shadow overflow-hidden">
+      {post.image_url && (
+        <div className="aspect-video w-full overflow-hidden">
+          <img 
+            src={post.image_url} 
+            alt={post.title} 
+            className="object-cover w-full h-full transition-transform hover:scale-105"
+          />
+        </div>
+      )}
+      
       <CardHeader className="pb-4">
         <Link to={`/post/${post.id}`}>
           <h2 className="text-2xl font-bold text-gray-900 hover:text-primary transition-colors line-clamp-2">

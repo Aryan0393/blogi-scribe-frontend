@@ -13,7 +13,7 @@ const EditPost: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   
-  const [post, setPost] = useState<{ title: string; content: string } | null>(null);
+  const [post, setPost] = useState<{ title: string; content: string; image_url?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
@@ -25,7 +25,11 @@ const EditPost: React.FC = () => {
       try {
         setIsLoading(true);
         const postData = await fetchPostById(parseInt(id));
-        setPost({ title: postData.title, content: postData.content });
+        setPost({ 
+          title: postData.title, 
+          content: postData.content,
+          image_url: postData.image_url 
+        });
         
         // Check if the current user is the owner of the post
         setIsOwner(user?.id === postData.author_id);
@@ -41,12 +45,12 @@ const EditPost: React.FC = () => {
     loadPost();
   }, [id, user?.id, navigate]);
   
-  const handleUpdatePost = async (values: { title: string; content: string }) => {
+  const handleUpdatePost = async (formData: FormData) => {
     if (!id) return;
     
     try {
       setIsSubmitting(true);
-      await updatePost(parseInt(id), values);
+      await updatePost(parseInt(id), formData);
       toast.success("Post updated successfully!");
       navigate(`/post/${id}`);
     } catch (error) {

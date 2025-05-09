@@ -1,4 +1,3 @@
-
 import { LoginCredentials, RegisterCredentials, BlogPost } from "@/types";
 import { toast } from "@/components/ui/sonner";
 
@@ -70,9 +69,17 @@ export const logout = () => {
 };
 
 // Blog post endpoints
-export const fetchAllPosts = async () => {
+export const fetchAllPosts = async (page = 1, limit = 6, search = '') => {
   try {
-    const response = await fetch(`${API_URL}/posts/`);
+    const queryParams = new URLSearchParams();
+    if (page) queryParams.append('page', page.toString());
+    if (limit) queryParams.append('limit', limit.toString());
+    if (search) queryParams.append('search', search);
+    
+    const queryString = queryParams.toString();
+    const url = `${API_URL}/posts/${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await fetch(url);
     
     const data = await response.json();
     
@@ -102,7 +109,7 @@ export const fetchPostById = async (id: number) => {
   }
 };
 
-export const createPost = async (post: { title: string; content: string }) => {
+export const createPost = async (post: FormData) => {
   try {
     const token = localStorage.getItem("token");
     
@@ -113,10 +120,9 @@ export const createPost = async (post: { title: string; content: string }) => {
     const response = await fetch(`${API_URL}/posts/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify(post),
+      body: post,
     });
     
     const data = await response.json();
@@ -131,7 +137,7 @@ export const createPost = async (post: { title: string; content: string }) => {
   }
 };
 
-export const updatePost = async (id: number, post: { title: string; content: string }) => {
+export const updatePost = async (id: number, post: FormData) => {
   try {
     const token = localStorage.getItem("token");
     
@@ -142,10 +148,9 @@ export const updatePost = async (id: number, post: { title: string; content: str
     const response = await fetch(`${API_URL}/posts/${id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify(post),
+      body: post,
     });
     
     const data = await response.json();

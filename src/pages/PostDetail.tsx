@@ -164,9 +164,19 @@ const PostDetail: React.FC = () => {
           )}
         </header>
         
+        {post.image_url && (
+          <div className="mb-8 rounded-lg overflow-hidden">
+            <img 
+              src={post.image_url} 
+              alt={post.title} 
+              className="w-full h-auto"
+            />
+          </div>
+        )}
+        
         <div className="text-base leading-relaxed max-w-none prose-headings:font-bold prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg">
           {post.content.split('\n').map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
+            <p key={index} className="mb-4">{paragraph}</p>
           ))}
         </div>
         
