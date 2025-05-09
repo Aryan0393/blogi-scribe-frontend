@@ -92,6 +92,7 @@ const Index: React.FC = () => {
               e.preventDefault();
               setPage(i);
             }}
+            className={page === i ? "bg-primary text-white" : ""}
           >
             {i}
           </PaginationLink>
@@ -104,28 +105,28 @@ const Index: React.FC = () => {
 
   return (
     <Layout>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-4xl font-bold mb-2">Recent Posts</h1>
-          <p className="text-gray-600 text-lg">Discover the latest articles from our community</p>
+      <div className="space-y-8 animated-bg">
+        <div className="text-center py-10 fade-in">
+          <h1 className="text-5xl font-bold mb-4 gradient-heading">Blogi</h1>
+          <p className="text-gray-600 text-xl max-w-2xl mx-auto">Discover the latest articles from our community of writers and thinkers</p>
         </div>
 
-        <form onSubmit={handleSearch} className="flex gap-2">
+        <form onSubmit={handleSearch} className="flex gap-2 max-w-xl mx-auto fade-in">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
             <Input
               type="search"
               placeholder="Search posts..."
-              className="pl-9"
+              className="pl-9 rounded-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button type="submit">Search</Button>
+          <Button type="submit" className="rounded-full">Search</Button>
         </form>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 staggered-fade-in">
             {Array(POSTS_PER_PAGE).fill(0).map((_, i) => (
               <div key={i} className="space-y-4">
                 <Skeleton className="h-8 w-3/4" />
@@ -138,23 +139,30 @@ const Index: React.FC = () => {
             ))}
           </div>
         ) : posts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 staggered-fade-in">
             {posts.map((post) => (
               <BlogCard key={post.id} post={post} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-xl text-gray-500">
-              {debouncedSearchQuery
-                ? `No posts found matching "${debouncedSearchQuery}". Try a different search term.`
-                : "No posts found. Be the first to create one!"}
-            </p>
+          <div className="text-center py-16 fade-in">
+            <div className="bg-white p-10 rounded-xl shadow-sm max-w-lg mx-auto">
+              <p className="text-xl text-gray-500 mb-4">
+                {debouncedSearchQuery
+                  ? `No posts found matching "${debouncedSearchQuery}". Try a different search term.`
+                  : "No posts found. Be the first to create one!"}
+              </p>
+              {!debouncedSearchQuery && (
+                <Button asChild>
+                  <Link to="/create">Create First Post</Link>
+                </Button>
+              )}
+            </div>
           </div>
         )}
 
         {totalPages > 1 && (
-          <Pagination className="mt-8">
+          <Pagination className="mt-12 fade-in">
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious 

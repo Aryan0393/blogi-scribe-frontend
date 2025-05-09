@@ -20,7 +20,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { formatDistanceToNow, format } from "date-fns";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Trash, ArrowLeft } from "lucide-react";
 
 const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -71,7 +71,7 @@ const PostDetail: React.FC = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className="max-w-3xl mx-auto space-y-6 fade-in">
           <Skeleton className="h-12 w-3/4" />
           <div className="space-y-2">
             <Skeleton className="h-4 w-1/3" />
@@ -86,12 +86,14 @@ const PostDetail: React.FC = () => {
   if (!post) {
     return (
       <Layout>
-        <div className="text-center py-12">
-          <h1 className="text-2xl font-bold mb-4">Post Not Found</h1>
-          <p className="text-gray-600 mb-6">The post you're looking for doesn't exist or has been removed.</p>
-          <Link to="/">
-            <Button>Return to Home</Button>
-          </Link>
+        <div className="text-center py-12 fade-in">
+          <div className="bg-white p-10 rounded-xl shadow-sm max-w-lg mx-auto">
+            <h1 className="text-2xl font-bold mb-4">Post Not Found</h1>
+            <p className="text-gray-600 mb-6">The post you're looking for doesn't exist or has been removed.</p>
+            <Link to="/">
+              <Button>Return to Home</Button>
+            </Link>
+          </div>
         </div>
       </Layout>
     );
@@ -104,86 +106,88 @@ const PostDetail: React.FC = () => {
   return (
     <Layout>
       <article className="max-w-3xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-          
-          <div className="flex flex-wrap items-center text-gray-600 text-sm gap-2 mb-6">
-            <span className="font-medium">By {post.author}</span>
-            <span>•</span>
-            <span>
-              Created on {format(createdAt, "MMM d, yyyy")}
-            </span>
-            {isUpdated && (
-              <>
-                <span>•</span>
-                <span>
-                  Updated {formatDistanceToNow(updatedAt, { addSuffix: true })}
-                </span>
-              </>
-            )}
-          </div>
-          
-          {isAuthenticated && isOwner && (
-            <div className="flex space-x-2">
-              <Link to={`/edit/${post.id}`}>
-                <Button variant="outline" size="sm" className="flex items-center">
-                  <Edit className="mr-2 h-4 w-4" /> Edit
-                </Button>
-              </Link>
-              
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button 
-                    variant="destructive" 
-                    size="sm" 
-                    className="flex items-center"
-                    disabled={isDeleting}
-                  >
-                    <Trash className="mr-2 h-4 w-4" /> Delete
+        <Link to="/" className="inline-flex items-center text-primary hover:underline mb-6 fade-in">
+          <ArrowLeft className="h-4 w-4 mr-1" /> Back to all posts
+        </Link>
+        
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-8 fade-in">
+          <header className="p-8">
+            <h1 className="text-4xl font-bold mb-4 gradient-heading">{post.title}</h1>
+            
+            <div className="flex flex-wrap items-center text-gray-600 text-sm gap-2 mb-6">
+              <span className="font-medium text-primary">By {post.author}</span>
+              <span>•</span>
+              <span>
+                {format(createdAt, "MMM d, yyyy")}
+              </span>
+              {isUpdated && (
+                <>
+                  <span>•</span>
+                  <span>
+                    Updated {formatDistanceToNow(updatedAt, { addSuffix: true })}
+                  </span>
+                </>
+              )}
+            </div>
+            
+            {isAuthenticated && isOwner && (
+              <div className="flex space-x-2">
+                <Link to={`/edit/${post.id}`}>
+                  <Button variant="outline" size="sm" className="flex items-center">
+                    <Edit className="mr-2 h-4 w-4" /> Edit
                   </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete your post.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
-                      onClick={handleDelete} 
-                      className="bg-destructive text-destructive-foreground"
+                </Link>
+                
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      className="flex items-center"
+                      disabled={isDeleting}
                     >
-                      {isDeleting ? "Deleting..." : "Delete"}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                      <Trash className="mr-2 h-4 w-4" /> Delete
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete your post.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleDelete} 
+                        className="bg-destructive text-destructive-foreground"
+                      >
+                        {isDeleting ? "Deleting..." : "Delete"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            )}
+          </header>
+          
+          {post.image_url && (
+            <div className="w-full">
+              <img 
+                src={post.image_url} 
+                alt={post.title} 
+                className="w-full h-auto"
+              />
             </div>
           )}
-        </header>
-        
-        {post.image_url && (
-          <div className="mb-8 rounded-lg overflow-hidden">
-            <img 
-              src={post.image_url} 
-              alt={post.title} 
-              className="w-full h-auto"
-            />
+          
+          <div className="p-8">
+            <div className="text-base leading-relaxed max-w-none blog-content">
+              {post.content.split('\n').map((paragraph, index) => (
+                <p key={index} className="mb-4">{paragraph}</p>
+              ))}
+            </div>
           </div>
-        )}
-        
-        <div className="text-base leading-relaxed max-w-none prose-headings:font-bold prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg">
-          {post.content.split('\n').map((paragraph, index) => (
-            <p key={index} className="mb-4">{paragraph}</p>
-          ))}
-        </div>
-        
-        <div className="mt-10 pt-6 border-t">
-          <Link to="/">
-            <Button variant="outline">← Back to All Posts</Button>
-          </Link>
         </div>
       </article>
     </Layout>
