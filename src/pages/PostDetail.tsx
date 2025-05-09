@@ -164,7 +164,7 @@ const PostDetail: React.FC = () => {
           )}
         </header>
         
-        <div className="blog-content prose-headings:font-bold prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg">
+        <div className="text-base leading-relaxed max-w-none prose-headings:font-bold prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg">
           {post.content.split('\n').map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}

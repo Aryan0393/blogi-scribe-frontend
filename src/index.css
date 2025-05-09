@@ -88,6 +88,6 @@
   }
   
   .blog-content {
-    @apply prose prose-lg max-w-none;
+    @apply text-base leading-relaxed max-w-none;
   }
 }
