@@ -58,6 +58,7 @@ const Index: React.FC = () => {
       } catch (error) {
         console.error("Error loading posts:", error);
         toast.error("Failed to load posts");
+        setPosts([]); // Ensure we clear posts on error
       } finally {
         setLoading(false);
       }
